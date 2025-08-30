@@ -1,0 +1,322 @@
+object ViewItemPedidoVenda: TViewItemPedidoVenda
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  ClientHeight = 254
+  ClientWidth = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  TextHeight = 15
+  object PanelTitulo: TPanel
+    Left = 0
+    Top = 0
+    Width = 403
+    Height = 50
+    Align = alTop
+    Alignment = taLeftJustify
+    BevelOuter = bvNone
+    Caption = 'Clientes'
+    Color = 16750083
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Roboto'
+    Font.Style = []
+    Padding.Left = 20
+    ParentBackground = False
+    ParentFont = False
+    ShowCaption = False
+    TabOrder = 0
+    ExplicitLeft = -140
+    ExplicitWidth = 764
+    object LabelTitulo: TLabel
+      Left = 20
+      Top = 0
+      Width = 383
+      Height = 50
+      Align = alClient
+      Caption = 'Item do pedido'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -19
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+      Layout = tlCenter
+      ExplicitWidth = 129
+      ExplicitHeight = 23
+    end
+  end
+  object PanelCadastroBottom: TPanel
+    Left = 0
+    Top = 214
+    Width = 403
+    Height = 40
+    Align = alBottom
+    BevelOuter = bvNone
+    Color = clWhite
+    Padding.Right = 10
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 1
+    ExplicitLeft = -132
+    ExplicitTop = 341
+    ExplicitWidth = 756
+    object PanelBotaoSalvar: TPanel
+      AlignWithMargins = True
+      Left = 270
+      Top = 3
+      Width = 120
+      Height = 34
+      Align = alRight
+      BevelOuter = bvNone
+      Caption = 'Panel1'
+      TabOrder = 0
+      ExplicitLeft = 623
+      object ShapeBotaoSalvar: TShape
+        Left = 0
+        Top = 0
+        Width = 120
+        Height = 34
+        Align = alClient
+        Brush.Color = 7325480
+        Pen.Color = 7325480
+        Pen.Style = psClear
+        Shape = stRoundRect
+        ExplicitLeft = 144
+        ExplicitTop = -8
+        ExplicitWidth = 65
+        ExplicitHeight = 65
+      end
+      object SpeedButtonSalvar: TSpeedButton
+        Left = 0
+        Top = 0
+        Width = 120
+        Height = 34
+        Cursor = crHandPoint
+        Align = alClient
+        Caption = 'Salvar'
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Roboto'
+        Font.Style = []
+        ParentFont = False
+        ExplicitLeft = 136
+        ExplicitTop = 8
+        ExplicitWidth = 23
+        ExplicitHeight = 22
+      end
+    end
+    object PanelBotaoCancelar: TPanel
+      AlignWithMargins = True
+      Left = 137
+      Top = 3
+      Width = 120
+      Height = 34
+      Margins.Right = 10
+      Align = alRight
+      BevelOuter = bvNone
+      Caption = 'PanelBotaoCancelar'
+      TabOrder = 1
+      ExplicitLeft = 490
+      object ShapeBotaoCancelar: TShape
+        Left = 0
+        Top = 0
+        Width = 120
+        Height = 34
+        Align = alClient
+        Brush.Color = 7094774
+        Pen.Color = 7325480
+        Pen.Style = psClear
+        Shape = stRoundRect
+        ExplicitLeft = 144
+        ExplicitTop = -8
+        ExplicitWidth = 65
+        ExplicitHeight = 65
+      end
+      object SpeedButtonCancelar: TSpeedButton
+        Left = 0
+        Top = 0
+        Width = 120
+        Height = 34
+        Cursor = crHandPoint
+        Align = alClient
+        Caption = 'Cancelar'
+        Flat = True
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Roboto'
+        Font.Style = []
+        ParentFont = False
+        ExplicitLeft = 136
+        ExplicitTop = 8
+        ExplicitWidth = 23
+        ExplicitHeight = 22
+      end
+    end
+  end
+  object PanelConteudo: TPanel
+    Left = 0
+    Top = 50
+    Width = 403
+    Height = 164
+    Align = alClient
+    BevelOuter = bvNone
+    Color = clWhite
+    Padding.Right = 10
+    ParentBackground = False
+    ShowCaption = False
+    TabOrder = 2
+    ExplicitTop = 47
+    ExplicitWidth = 624
+    ExplicitHeight = 351
+    object Label1: TLabel
+      Left = 16
+      Top = 10
+      Width = 57
+      Height = 19
+      Caption = 'Produto'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label2: TLabel
+      Left = 16
+      Top = 82
+      Width = 82
+      Height = 19
+      Caption = 'Quantidade'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label3: TLabel
+      Left = 131
+      Top = 82
+      Width = 97
+      Height = 19
+      Caption = 'Valor unit'#225'rio'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+    end
+    object DBEditCodigo: TDBEdit
+      Left = 16
+      Top = 35
+      Width = 50
+      Height = 29
+      DataField = 'CodigoProduto'
+      DataSource = dsItemPedido
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object DBEdit1: TDBEdit
+      Left = 16
+      Top = 107
+      Width = 100
+      Height = 29
+      DataField = 'Quantidade'
+      DataSource = dsItemPedido
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 1
+    end
+    object DBEdit2: TDBEdit
+      Left = 131
+      Top = 107
+      Width = 100
+      Height = 29
+      DataField = 'ValorUnitario'
+      DataSource = dsItemPedido
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Roboto'
+      Font.Style = []
+      ParentFont = False
+      ReadOnly = True
+      TabOrder = 2
+    end
+    object DBLookupComboBoxEstado: TDBLookupComboBox
+      Left = 75
+      Top = 35
+      Width = 315
+      Height = 29
+      DataField = 'CodigoProduto'
+      DataSource = dsItemPedido
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      KeyField = 'Codigo'
+      ListField = 'Descricao'
+      ListSource = dsProduto
+      ParentFont = False
+      TabOrder = 3
+    end
+  end
+  object cdsProduto: TClientDataSet
+    PersistDataPacket.Data = {
+      290000009619E0BD010000001800000001000000000003000000290006436F64
+      69676F04000100000000000000}
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'Codigo'
+        DataType = ftInteger
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 264
+    Top = 154
+    object cdsProdutoCodigo: TIntegerField
+      FieldName = 'Codigo'
+    end
+    object cdsProdutoDescricao: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Descricao'
+      Size = 60
+      Calculated = True
+    end
+  end
+  object dsProduto: TDataSource
+    DataSet = cdsProduto
+    Left = 336
+    Top = 154
+  end
+  object dsItemPedido: TDataSource
+    Left = 40
+    Top = 194
+  end
+end
