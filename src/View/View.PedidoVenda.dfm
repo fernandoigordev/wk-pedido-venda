@@ -10,6 +10,7 @@ object ViewPedido: TViewPedido
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnCreate = FormCreate
   TextHeight = 15
   object PanelTitulo: TPanel
     Left = 0
@@ -31,7 +32,6 @@ object ViewPedido: TViewPedido
     ParentFont = False
     ShowCaption = False
     TabOrder = 0
-    ExplicitLeft = -140
     object LabelTitulo: TLabel
       Left = 20
       Top = 0
@@ -55,7 +55,7 @@ object ViewPedido: TViewPedido
     Top = 50
     Width = 764
     Height = 391
-    ActivePage = TabSheetCadastro
+    ActivePage = TabSheetListagem
     Align = alClient
     TabOrder = 1
     object TabSheetListagem: TTabSheet
@@ -113,6 +113,7 @@ object ViewPedido: TViewPedido
             Font.Name = 'Roboto'
             Font.Style = []
             ParentFont = False
+            OnClick = SpeedButtonNovoClick
             ExplicitLeft = 136
             ExplicitTop = 8
             ExplicitWidth = 23
@@ -129,6 +130,7 @@ object ViewPedido: TViewPedido
         Align = alClient
         BorderStyle = bsNone
         Color = clWhite
+        DataSource = dsPedido
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -142,48 +144,54 @@ object ViewPedido: TViewPedido
         TitleFont.Height = -16
         TitleFont.Name = 'Roboto'
         TitleFont.Style = []
+        OnKeyPress = DBGridListagemKeyPress
         Columns = <
           item
             Expanded = False
-            FieldName = 'Codigo'
-            Title.Caption = 'C'#243'digo'
+            FieldName = 'Numero'
+            Title.Caption = 'N'#250'mero'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
             Title.Font.Height = -16
             Title.Font.Name = 'Segoe UI'
             Title.Font.Style = []
-            Width = 70
+            Width = 100
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'Cnpj'
+            FieldName = 'CodigoCliente'
+            Title.Caption = 'C'#243'd. Cliente'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
             Title.Font.Height = -16
             Title.Font.Name = 'Segoe UI'
             Title.Font.Style = []
+            Width = 106
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'RazaoSocial'
-            Title.Caption = 'Raz'#227'o Social'
+            FieldName = 'DataEmissao'
+            Title.Caption = 'Data de emiss'#227'o'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
             Title.Font.Height = -16
             Title.Font.Name = 'Segoe UI'
             Title.Font.Style = []
+            Width = 149
             Visible = True
           end
           item
             Expanded = False
-            FieldName = 'Telefone'
+            FieldName = 'ValorTotal'
+            Title.Caption = 'Valor Total'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
             Title.Font.Height = -16
             Title.Font.Name = 'Segoe UI'
             Title.Font.Style = []
+            Width = 138
             Visible = True
           end>
       end
@@ -254,6 +262,7 @@ object ViewPedido: TViewPedido
               Font.Name = 'Roboto'
               Font.Style = []
               ParentFont = False
+              OnClick = SpeedButtonSalvarClick
               ExplicitLeft = 136
               ExplicitTop = 8
               ExplicitWidth = 23
@@ -301,6 +310,7 @@ object ViewPedido: TViewPedido
               Font.Name = 'Roboto'
               Font.Style = []
               ParentFont = False
+              OnClick = SpeedButtonCancelarClick
               ExplicitLeft = 136
               ExplicitTop = 8
               ExplicitWidth = 23
@@ -410,7 +420,6 @@ object ViewPedido: TViewPedido
           ParentBackground = False
           ShowCaption = False
           TabOrder = 2
-          ExplicitTop = 8
           object Label3: TLabel
             AlignWithMargins = True
             Left = 5
@@ -657,5 +666,39 @@ object ViewPedido: TViewPedido
     DataSet = cdsCliente
     Left = 240
     Top = 312
+  end
+  object cdsProduto: TClientDataSet
+    PersistDataPacket.Data = {
+      500000009619E0BD010000001800000002000000000003000000500006436F64
+      69676F04000100000000000A507265636F56656E646108000400000001000753
+      5542545950450200490006004D6F6E6579000000}
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'Codigo'
+        DataType = ftInteger
+      end
+      item
+        Name = 'PrecoVenda'
+        DataType = ftCurrency
+      end>
+    IndexDefs = <>
+    Params = <>
+    StoreDefs = True
+    Left = 320
+    Top = 256
+    object cdsProdutoCodigo: TIntegerField
+      FieldName = 'Codigo'
+    end
+    object cdsProdutoDescricao: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'Descricao'
+      Size = 60
+      Calculated = True
+    end
+    object cdsProdutoPrecoVenda: TCurrencyField
+      FieldName = 'PrecoVenda'
+    end
   end
 end

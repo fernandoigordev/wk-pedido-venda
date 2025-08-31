@@ -135,6 +135,23 @@
             <Form>ViewItemPedidoVenda</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="src\Dao\Dao.Base.pas"/>
+        <DCCReference Include="src\Dao\Dao.PedidoVenda.pas"/>
+        <DCCReference Include="src\Model\Model.Connection.pas">
+            <Form>ModelConnection</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="src\Model\Model.PedidoVenda.pas"/>
+        <DCCReference Include="src\Controller\Controller.PedidoVenda.pas"/>
+        <DCCReference Include="src\Dao\Dao.ItemPedidoVenda.pas"/>
+        <DCCReference Include="src\Model\Model.ItemPedidoVenda.pas"/>
+        <DCCReference Include="src\Dao\Dao.Cliente.pas"/>
+        <DCCReference Include="src\Model\Model.Cliente.pas"/>
+        <DCCReference Include="src\Model\Model.Produto.pas"/>
+        <DCCReference Include="src\Dao\Dao.Produto.pas"/>
+        <DCCReference Include="src\Controller\Controller.Cliente.pas"/>
+        <DCCReference Include="src\Controller\Controller.Produto.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

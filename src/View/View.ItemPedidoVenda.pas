@@ -26,15 +26,12 @@ type
     Label3: TLabel;
     DBEdit2: TDBEdit;
     DBLookupComboBoxEstado: TDBLookupComboBox;
-    cdsProduto: TClientDataSet;
-    cdsProdutoCodigo: TIntegerField;
-    cdsProdutoDescricao: TStringField;
     dsProduto: TDataSource;
     dsItemPedido: TDataSource;
   private
     { Private declarations }
   public
-    procedure SetCdsItemPedido(ACdsItemPedido: TClientDataSet);
+    procedure SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet);
 
   end;
 
@@ -45,9 +42,10 @@ implementation
 
 { TViewItemPedidoVenda }
 
-procedure TViewItemPedidoVenda.SetCdsItemPedido(ACdsItemPedido: TClientDataSet);
+procedure TViewItemPedidoVenda.SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet);
 begin
   dsItemPedido.DataSet := ACdsItemPedido;
+  dsProduto.DataSet := ACdsProduto;
 end;
 
 end.

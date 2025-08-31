@@ -31,8 +31,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
     ParentFont = False
     ShowCaption = False
     TabOrder = 0
-    ExplicitLeft = -140
-    ExplicitWidth = 764
     object LabelTitulo: TLabel
       Left = 20
       Top = 0
@@ -63,9 +61,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
     ParentBackground = False
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = -132
-    ExplicitTop = 341
-    ExplicitWidth = 756
     object PanelBotaoSalvar: TPanel
       AlignWithMargins = True
       Left = 270
@@ -76,7 +71,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       BevelOuter = bvNone
       Caption = 'Panel1'
       TabOrder = 0
-      ExplicitLeft = 623
       object ShapeBotaoSalvar: TShape
         Left = 0
         Top = 0
@@ -124,7 +118,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       BevelOuter = bvNone
       Caption = 'PanelBotaoCancelar'
       TabOrder = 1
-      ExplicitLeft = 490
       object ShapeBotaoCancelar: TShape
         Left = 0
         Top = 0
@@ -174,9 +167,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
     ParentBackground = False
     ShowCaption = False
     TabOrder = 2
-    ExplicitTop = 47
-    ExplicitWidth = 624
-    ExplicitHeight = 351
     object Label1: TLabel
       Left = 16
       Top = 10
@@ -236,7 +226,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       Left = 16
       Top = 107
       Width = 100
-      Height = 29
+      Height = 27
       DataField = 'Quantidade'
       DataSource = dsItemPedido
       Font.Charset = DEFAULT_CHARSET
@@ -252,7 +242,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       Left = 131
       Top = 107
       Width = 100
-      Height = 29
+      Height = 27
       DataField = 'ValorUnitario'
       DataSource = dsItemPedido
       Font.Charset = DEFAULT_CHARSET
@@ -284,34 +274,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       TabOrder = 3
     end
   end
-  object cdsProduto: TClientDataSet
-    PersistDataPacket.Data = {
-      290000009619E0BD010000001800000001000000000003000000290006436F64
-      69676F04000100000000000000}
-    Active = True
-    Aggregates = <>
-    FieldDefs = <
-      item
-        Name = 'Codigo'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
-    Params = <>
-    StoreDefs = True
-    Left = 264
-    Top = 154
-    object cdsProdutoCodigo: TIntegerField
-      FieldName = 'Codigo'
-    end
-    object cdsProdutoDescricao: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'Descricao'
-      Size = 60
-      Calculated = True
-    end
-  end
   object dsProduto: TDataSource
-    DataSet = cdsProduto
     Left = 336
     Top = 154
   end
