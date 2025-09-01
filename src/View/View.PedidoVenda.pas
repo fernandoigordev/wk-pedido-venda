@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB,
   Vcl.DBCtrls, Vcl.Mask, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.ComCtrls,
-  Datasnap.DBClient, Model.ItemPedidoVenda, System.Generics.Collections, Controller.PedidoVenda;
+  Datasnap.DBClient, Model.ItemPedidoVenda, System.Generics.Collections, Controller.PedidoVenda, Model.PedidoVenda;
 
 type
   TViewPedido = class(TForm)
@@ -32,13 +32,12 @@ type
     SpeedButtonCancelar: TSpeedButton;
     DBEditCodigo: TDBEdit;
     DBEditCodigoCliente: TDBEdit;
-    DBLookupComboBoxEstado: TDBLookupComboBox;
     PanelDadosPedido: TPanel;
     PanelBotaoTop: TPanel;
     Panel2: TPanel;
     Shape1: TShape;
     SpeedButton1: TSpeedButton;
-    DBGrid1: TDBGrid;
+    DBGridItemPedido: TDBGrid;
     Label3: TLabel;
     cdsPedido: TClientDataSet;
     cdsItemPedido: TClientDataSet;
@@ -52,16 +51,20 @@ type
     cdsItemPedidoQuantidade: TIntegerField;
     cdsItemPedidoValorUnitario: TCurrencyField;
     cdsItemPedidoValorTotal: TCurrencyField;
-    cdsCliente: TClientDataSet;
-    cdsClienteCodigo: TIntegerField;
     dsPedido: TDataSource;
     dsItemPedido: TDataSource;
     dsCliente: TDataSource;
-    cdsClienteDescricao: TStringField;
     cdsProduto: TClientDataSet;
     cdsProdutoCodigo: TIntegerField;
-    cdsProdutoDescricao: TStringField;
     cdsProdutoPrecoVenda: TCurrencyField;
+    cdsCliente: TClientDataSet;
+    cdsClienteCodigo: TIntegerField;
+    cdsClienteDescricao: TStringField;
+    cdsPedidoDescricaoCliente: TStringField;
+    DBLookupComboBoxCliente: TDBLookupComboBox;
+    cdsItemPedidoDescricaoProduto: TStringField;
+    cdsItemPedidoPrecoDoProduto: TCurrencyField;
+    cdsProdutoDescricao: TStringField;
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure DBGridListagemKeyPress(Sender: TObject; var Key: Char);
@@ -75,6 +78,7 @@ type
     procedure PreencheCdsCliente;
     procedure PreencheCdsPedido;
     procedure PreencheCdsItemPedido(AListaItem: TObjectList<TModelItemPedidoVenda>);
+    Procedure PopulaPedido(APedido: TModelPedidoVenda);
 
     procedure ListarPedidos;
     procedure AbreTelaItemPedido;
@@ -90,7 +94,7 @@ implementation
 
 uses
   View.ItemPedidoVenda, Controller.Cliente, Model.Cliente,
-  Controller.Produto, Model.Produto, Model.PedidoVenda;
+  Controller.Produto, Model.Produto;
 
 {$R *.dfm}
 
@@ -98,7 +102,7 @@ procedure TViewPedido.AbreTelaItemPedido;
 var
   LViewItemPedidoVenda: TViewItemPedidoVenda;
 begin
-  LViewItemPedidoVenda := TViewItemPedidoVenda.Create(nil);
+  LViewItemPedidoVenda := TViewItemPedidoVenda.Create(Self);
   try
     LViewItemPedidoVenda.SetCds(cdsItemPedido, cdsProduto);
     LViewItemPedidoVenda.ShowModal;
@@ -140,6 +144,30 @@ end;
 procedure TViewPedido.MudarAba(ATabSheet: TTabSheet);
 begin
   PageControlCadastro.ActivePage := ATabSheet;
+end;
+
+procedure TViewPedido.PopulaPedido(APedido: TModelPedidoVenda);
+var
+  LItemPedido: TModelItemPedidoVenda;
+begin
+  APedido.Numero := cdsPedidoNumero.AsInteger;
+  Apedido.DataEmissao := cdsPedidoDataEmissao.AsDateTime;
+  Apedido.CodigoCliente := cdsPedidoCodigoCliente.AsInteger;
+  Apedido.ValorTotal := cdsPedidoValorTotal.AsCurrency;
+
+  cdsItemPedido.First;
+  while not cdsItemPedido.Eof do
+  begin
+    LItemPedido := TModelItemPedidoVenda.Create;
+    LItemPedido.Codigo := cdsItemPedidoCodigo.AsInteger;
+    LItemPedido.NumeroPedido := cdsItemPedidoNumeroPedido.AsInteger;
+    LItemPedido.CodigoProduto := cdsItemPedidoCodigoProduto.AsInteger;
+    LItemPedido.Quantidade := cdsItemPedidoQuantidade.AsInteger;
+    LItemPedido.ValorUnitario := cdsItemPedidoValorUnitario.AsCurrency;
+    LItemPedido.ValorTotal := cdsItemPedidoValorTotal.AsCurrency;
+    Apedido.Itens.Add(LItemPedido);
+    cdsItemPedido.Next;
+  end;
 end;
 
 procedure TViewPedido.PreencheCdsCliente;
@@ -212,7 +240,7 @@ var
   LListaProduto: TObjectList<TModelProduto>;
   LProduto: TModelProduto;
 begin
-  cdsCliente.EmptyDataSet;
+  cdsProduto.EmptyDataSet;
   LControllerProduto := TControllerProduto.Create;
   try
     LListaProduto := LControllerProduto.GetAll;
@@ -256,11 +284,17 @@ var
   LModel: TModelPedidoVenda;
 begin
   cdsPedido.Post;
-  //Peenche o objeto e manda salvar
-  if LModel.Numero > 0 then
-    FControllerPedidoVenda.Update(LModel)
-  else
-    FControllerPedidoVenda.Insert(LModel);
+
+  LModel := TModelPedidoVenda.Create;
+  try
+    PopulaPedido(LModel);
+    if LModel.Numero > 0 then
+      FControllerPedidoVenda.Update(LModel)
+    else
+      FControllerPedidoVenda.Insert(LModel);
+  finally
+    LModel.Free;
+  end;
 
   MudarAba(TabSheetListagem);
 end;

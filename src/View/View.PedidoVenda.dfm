@@ -161,16 +161,14 @@ object ViewPedido: TViewPedido
             Visible = True
           end
           item
-            Alignment = taLeftJustify
             Expanded = False
-            FieldName = 'CodigoCliente'
-            Title.Caption = 'C'#243'd. Cliente'
+            FieldName = 'DescricaoCliente'
+            Title.Caption = 'Cliente'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
             Title.Font.Height = -16
             Title.Font.Name = 'Segoe UI'
             Title.Font.Style = []
-            Width = 106
             Visible = True
           end
           item
@@ -394,13 +392,14 @@ object ViewPedido: TViewPedido
             ParentFont = False
             TabOrder = 1
           end
-          object DBLookupComboBoxEstado: TDBLookupComboBox
+          object DBLookupComboBoxCliente: TDBLookupComboBox
             Left = 189
             Top = 36
             Width = 554
             Height = 29
             DataField = 'CodigoCliente'
             DataSource = dsPedido
+            Enabled = False
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -491,7 +490,7 @@ object ViewPedido: TViewPedido
             end
           end
         end
-        object DBGrid1: TDBGrid
+        object DBGridItemPedido: TDBGrid
           AlignWithMargins = True
           Left = 3
           Top = 124
@@ -500,6 +499,7 @@ object ViewPedido: TViewPedido
           Align = alClient
           BorderStyle = bsNone
           Color = clWhite
+          DataSource = dsItemPedido
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -16
@@ -515,6 +515,7 @@ object ViewPedido: TViewPedido
           TitleFont.Style = []
           Columns = <
             item
+              Alignment = taLeftJustify
               Expanded = False
               FieldName = 'Codigo'
               Title.Caption = 'C'#243'digo'
@@ -528,6 +529,7 @@ object ViewPedido: TViewPedido
             end
             item
               Expanded = False
+              FieldName = 'DescricaoProduto'
               Title.Caption = 'Descri'#231#227'o'
               Title.Font.Charset = DEFAULT_CHARSET
               Title.Font.Color = clWindowText
@@ -539,8 +541,8 @@ object ViewPedido: TViewPedido
             end
             item
               Expanded = False
-              FieldName = 'Telefone'
-              Title.Caption = 'Quantidade'
+              FieldName = 'Quantidade'
+              Title.Alignment = taRightJustify
               Title.Font.Charset = DEFAULT_CHARSET
               Title.Font.Color = clWindowText
               Title.Font.Height = -16
@@ -551,6 +553,8 @@ object ViewPedido: TViewPedido
             end
             item
               Expanded = False
+              FieldName = 'ValorUnitario'
+              Title.Alignment = taRightJustify
               Title.Caption = 'Vlr. Unit'#225'rio'
               Title.Font.Charset = DEFAULT_CHARSET
               Title.Font.Color = clWindowText
@@ -562,6 +566,8 @@ object ViewPedido: TViewPedido
             end
             item
               Expanded = False
+              FieldName = 'ValorTotal'
+              Title.Alignment = taRightJustify
               Title.Caption = 'Vlr. Total'
               Title.Font.Charset = DEFAULT_CHARSET
               Title.Font.Color = clWindowText
@@ -583,7 +589,26 @@ object ViewPedido: TViewPedido
       080004000000010007535542545950450200490006004D6F6E6579000000}
     Active = True
     Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'Numero'
+        DataType = ftInteger
+      end
+      item
+        Name = 'DataEmissao'
+        DataType = ftDate
+      end
+      item
+        Name = 'CodigoCliente'
+        DataType = ftInteger
+      end
+      item
+        Name = 'ValorTotal'
+        DataType = ftCurrency
+      end>
+    IndexDefs = <>
     Params = <>
+    StoreDefs = True
     Left = 64
     Top = 256
     object cdsPedidoNumero: TIntegerField
@@ -598,6 +623,16 @@ object ViewPedido: TViewPedido
     object cdsPedidoValorTotal: TCurrencyField
       FieldName = 'ValorTotal'
     end
+    object cdsPedidoDescricaoCliente: TStringField
+      FieldKind = fkLookup
+      FieldName = 'DescricaoCliente'
+      LookupDataSet = cdsCliente
+      LookupKeyFields = 'Codigo'
+      LookupResultField = 'Descricao'
+      KeyFields = 'CodigoCliente'
+      Size = 60
+      Lookup = True
+    end
   end
   object cdsItemPedido: TClientDataSet
     PersistDataPacket.Data = {
@@ -609,7 +644,38 @@ object ViewPedido: TViewPedido
       04000000010007535542545950450200490006004D6F6E6579000000}
     Active = True
     Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'Codigo'
+        DataType = ftInteger
+      end
+      item
+        Name = 'NumeroPedido'
+        DataType = ftInteger
+      end
+      item
+        Name = 'CodigoProduto'
+        DataType = ftInteger
+      end
+      item
+        Name = 'Quantidade'
+        DataType = ftInteger
+      end
+      item
+        Name = 'ValorUnitario'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'ValorTotal'
+        DataType = ftCurrency
+      end>
+    IndexDefs = <>
+    IndexFieldNames = 'NumeroPedido'
+    MasterFields = 'Numero'
+    MasterSource = dsPedido
+    PacketRecords = 0
     Params = <>
+    StoreDefs = True
     Left = 152
     Top = 256
     object cdsItemPedidoCodigo: TIntegerField
@@ -630,56 +696,47 @@ object ViewPedido: TViewPedido
     object cdsItemPedidoValorTotal: TCurrencyField
       FieldName = 'ValorTotal'
     end
-  end
-  object cdsCliente: TClientDataSet
-    PersistDataPacket.Data = {
-      290000009619E0BD010000001800000001000000000003000000290006436F64
-      69676F04000100000000000000}
-    Active = True
-    Aggregates = <>
-    FieldDefs = <
-      item
-        Name = 'Codigo'
-        DataType = ftInteger
-      end>
-    IndexDefs = <>
-    Params = <>
-    StoreDefs = True
-    Left = 240
-    Top = 256
-    object cdsClienteCodigo: TIntegerField
-      FieldName = 'Codigo'
-    end
-    object cdsClienteDescricao: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'Descricao'
+    object cdsItemPedidoDescricaoProduto: TStringField
+      FieldKind = fkLookup
+      FieldName = 'DescricaoProduto'
+      LookupDataSet = cdsProduto
+      LookupKeyFields = 'Codigo'
+      LookupResultField = 'Descricao'
+      KeyFields = 'CodigoProduto'
       Size = 60
-      Calculated = True
+      Lookup = True
+    end
+    object cdsItemPedidoPrecoDoProduto: TCurrencyField
+      FieldKind = fkLookup
+      FieldName = 'PrecoDoProduto'
+      LookupDataSet = cdsProduto
+      LookupKeyFields = 'Codigo'
+      LookupResultField = 'PrecoVenda'
+      KeyFields = 'CodigoProduto'
+      Lookup = True
     end
   end
   object dsPedido: TDataSource
-    AutoEdit = False
     DataSet = cdsPedido
     Left = 64
     Top = 312
   end
   object dsItemPedido: TDataSource
-    AutoEdit = False
     DataSet = cdsItemPedido
     Left = 152
     Top = 312
   end
   object dsCliente: TDataSource
-    AutoEdit = False
     DataSet = cdsCliente
     Left = 240
     Top = 312
   end
   object cdsProduto: TClientDataSet
     PersistDataPacket.Data = {
-      500000009619E0BD010000001800000002000000000003000000500006436F64
+      6E0000009619E0BD0100000018000000030000000000030000006E0006436F64
       69676F04000100000000000A507265636F56656E646108000400000001000753
-      5542545950450200490006004D6F6E6579000000}
+      5542545950450200490006004D6F6E6579000944657363726963616F01004900
+      00000100055749445448020002003C000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -690,6 +747,11 @@ object ViewPedido: TViewPedido
       item
         Name = 'PrecoVenda'
         DataType = ftCurrency
+      end
+      item
+        Name = 'Descricao'
+        DataType = ftString
+        Size = 60
       end>
     IndexDefs = <>
     Params = <>
@@ -699,14 +761,30 @@ object ViewPedido: TViewPedido
     object cdsProdutoCodigo: TIntegerField
       FieldName = 'Codigo'
     end
-    object cdsProdutoDescricao: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'Descricao'
-      Size = 60
-      Calculated = True
-    end
     object cdsProdutoPrecoVenda: TCurrencyField
       FieldName = 'PrecoVenda'
+    end
+    object cdsProdutoDescricao: TStringField
+      FieldName = 'Descricao'
+      Size = 60
+    end
+  end
+  object cdsCliente: TClientDataSet
+    PersistDataPacket.Data = {
+      470000009619E0BD010000001800000002000000000003000000470006436F64
+      69676F04000100000000000944657363726963616F0100490000000100055749
+      445448020002003C000000}
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 240
+    Top = 256
+    object cdsClienteCodigo: TIntegerField
+      FieldName = 'Codigo'
+    end
+    object cdsClienteDescricao: TStringField
+      FieldName = 'Descricao'
+      Size = 60
     end
   end
 end

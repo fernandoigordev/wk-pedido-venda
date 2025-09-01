@@ -10,6 +10,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poOwnerFormCenter
   TextHeight = 15
   object PanelTitulo: TPanel
     Left = 0
@@ -101,6 +102,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
         Font.Name = 'Roboto'
         Font.Style = []
         ParentFont = False
+        OnClick = SpeedButtonSalvarClick
         ExplicitLeft = 136
         ExplicitTop = 8
         ExplicitWidth = 23
@@ -148,6 +150,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
         Font.Name = 'Roboto'
         Font.Style = []
         ParentFont = False
+        OnClick = SpeedButtonCancelarClick
         ExplicitLeft = 136
         ExplicitTop = 8
         ExplicitWidth = 23
@@ -219,7 +222,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       Font.Name = 'Roboto'
       Font.Style = []
       ParentFont = False
-      ReadOnly = True
       TabOrder = 0
     end
     object DBEdit1: TDBEdit
@@ -235,7 +237,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       Font.Name = 'Roboto'
       Font.Style = []
       ParentFont = False
-      ReadOnly = True
       TabOrder = 1
     end
     object DBEdit2: TDBEdit
@@ -251,7 +252,6 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       Font.Name = 'Roboto'
       Font.Style = []
       ParentFont = False
-      ReadOnly = True
       TabOrder = 2
     end
     object DBLookupComboBoxEstado: TDBLookupComboBox

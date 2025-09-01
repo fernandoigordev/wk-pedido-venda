@@ -28,6 +28,8 @@ type
     DBLookupComboBoxEstado: TDBLookupComboBox;
     dsProduto: TDataSource;
     dsItemPedido: TDataSource;
+    procedure SpeedButtonCancelarClick(Sender: TObject);
+    procedure SpeedButtonSalvarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -46,6 +48,19 @@ procedure TViewItemPedidoVenda.SetCds(ACdsItemPedido, ACdsProduto: TClientDataSe
 begin
   dsItemPedido.DataSet := ACdsItemPedido;
   dsProduto.DataSet := ACdsProduto;
+  dsItemPedido.DataSet.Append;
+end;
+
+procedure TViewItemPedidoVenda.SpeedButtonCancelarClick(Sender: TObject);
+begin
+  dsItemPedido.DataSet.Cancel;
+  Close;
+end;
+
+procedure TViewItemPedidoVenda.SpeedButtonSalvarClick(Sender: TObject);
+begin
+  dsItemPedido.DataSet.Post;
+  Close;
 end;
 
 end.

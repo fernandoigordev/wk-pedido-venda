@@ -130,7 +130,12 @@ begin
   FQuery.ExecSQL;
 
   for Var ModelItem in AModel.Itens do
-    FDaoItemPedidoVenda.Update(ModelItem);
+  begin
+    if ModelItem.Codigo > 0 then
+      FDaoItemPedidoVenda.Update(ModelItem)
+    else
+      FDaoItemPedidoVenda.Insert(ModelItem)
+  end;
 end;
 
 end.
