@@ -106,7 +106,7 @@ end;
 function TDaoPedidoVenda.GetProximoNumero: Integer;
 begin
   FQuery.Close;
-  FQuery.SQL.Text := 'SELECT (Max(Numero) + 1) AS ProximoCodigo FROM PedidoVenda';
+  FQuery.SQL.Text := 'SELECT (Coalesce(Max(Numero),0) + 1) AS ProximoCodigo FROM PedidoVenda';
   FQuery.Open;
   Result := FQuery.FieldByName('ProximoCodigo').AsInteger;
 end;
