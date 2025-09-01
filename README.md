@@ -8,6 +8,6 @@
   2. Restaure o banco de dados no MySql utilizando o dump com o nome de "{Repositório}/bin/dump-wktechnology.sql"
   3. Configure a conexão com o banco no arquivo "{Repositório}/bin/Configuracao.ini"
   4. Na pasta "{Repositório}/bin" também está disponível a biblioteca do banco de dados junto com a aplicação!
-  5. O Programa foi desenvolvimento em 64-bit com MySql Server na versão 8.0.41
+  5. O teste foi desenvolvimento no Delphi 12 e MySql Server 8.0.41, o programa foi compilado em 64-bit.
  
 
