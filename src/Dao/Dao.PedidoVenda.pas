@@ -19,12 +19,13 @@ type
     procedure Insert(AModel: TModelPedidoVenda);override;
     procedure Update(AModel: TModelPedidoVenda);override;
     procedure Delete(AId: Integer);override;
+    function GetProximoNumero: Integer;
   end;
 
 implementation
 
 uses
-  Data.DB;
+  Data.DB, Model.Connection;
 
 { TDaoPedidoVenda }
 
@@ -99,42 +100,70 @@ begin
   end;
 end;
 
-procedure TDaoPedidoVenda.Insert(AModel: TModelPedidoVenda);
+function TDaoPedidoVenda.GetProximoNumero: Integer;
 begin
   FQuery.Close;
-  FQuery.SQL.Text :=
-  'INSERT INTO PedidoVenda(Numero, DataEmissao, CodigoCliente, ValorTotal) ' +
-  'VALUES(:Numero, :DataEmissao, :CodigoCliente, :ValorTotal)';
+  FQuery.SQL.Text := 'SELECT (Max(Numero) + 1) AS ProximoCodigo FROM PedidoVenda';
+  FQuery.Open;
+  Result := FQuery.FieldByName('ProximoCodigo').AsInteger;
+end;
 
-  FQuery.ParamByName('Numero').AsInteger := AModel.Numero;
-  FQuery.ParamByName('DataEmissao').AsDate := AModel.DataEmissao;
-  FQuery.ParamByName('CodigoCliente').AsInteger := AModel.CodigoCliente;
-  FQuery.ParamByName('ValorTotal').AsCurrency := AModel.ValorTotal;
-  FQuery.ExecSQL;
+procedure TDaoPedidoVenda.Insert(AModel: TModelPedidoVenda);
+begin
+  try
+    TModelConnection.GetInstance.FDConnection.StartTransaction;
+    FQuery.Close;
+    FQuery.SQL.Text :=
+    'INSERT INTO PedidoVenda(Numero, DataEmissao, CodigoCliente, ValorTotal) ' +
+    'VALUES(:Numero, :DataEmissao, :CodigoCliente, :ValorTotal)';
 
-  for Var ModelItem in AModel.Itens do
-    FDaoItemPedidoVenda.Insert(ModelItem);
+    FQuery.ParamByName('Numero').AsInteger := AModel.Numero;
+    FQuery.ParamByName('DataEmissao').AsDate := AModel.DataEmissao;
+    FQuery.ParamByName('CodigoCliente').AsInteger := AModel.CodigoCliente;
+    FQuery.ParamByName('ValorTotal').AsCurrency := AModel.ValorTotal;
+    FQuery.ExecSQL;
+
+    for Var ModelItem in AModel.Itens do
+    begin
+      ModelItem.NumeroPedido := AModel.Numero;
+      FDaoItemPedidoVenda.Insert(ModelItem);
+    end;
+    TModelConnection.GetInstance.FDConnection.Commit;
+  except
+    TModelConnection.GetInstance.FDConnection.Rollback;
+    raise;
+  end;
 end;
 
 procedure TDaoPedidoVenda.Update(AModel: TModelPedidoVenda);
 begin
-  FQuery.Close;
-  FQuery.SQL.Text :=
-  'UPDATE PedidoVenda SET DataEmissao = :DataEmissao, CodigoCliente = :CodigoCliente, ValorTotal = :ValorTotal ' +
-  'WHERE Numero = :Numero';
+  try
+    TModelConnection.GetInstance.FDConnection.StartTransaction;
+    FQuery.Close;
+    FQuery.SQL.Text :=
+    'UPDATE PedidoVenda SET DataEmissao = :DataEmissao, CodigoCliente = :CodigoCliente, ValorTotal = :ValorTotal ' +
+    'WHERE Numero = :Numero';
 
-  FQuery.ParamByName('Numero').AsInteger := AModel.Numero;
-  FQuery.ParamByName('DataEmissao').AsDate := AModel.DataEmissao;
-  FQuery.ParamByName('CodigoCliente').AsInteger := AModel.CodigoCliente;
-  FQuery.ParamByName('ValorTotal').AsCurrency := AModel.ValorTotal;
-  FQuery.ExecSQL;
+    FQuery.ParamByName('Numero').AsInteger := AModel.Numero;
+    FQuery.ParamByName('DataEmissao').AsDate := AModel.DataEmissao;
+    FQuery.ParamByName('CodigoCliente').AsInteger := AModel.CodigoCliente;
+    FQuery.ParamByName('ValorTotal').AsCurrency := AModel.ValorTotal;
+    FQuery.ExecSQL;
 
-  for Var ModelItem in AModel.Itens do
-  begin
-    if ModelItem.Codigo > 0 then
-      FDaoItemPedidoVenda.Update(ModelItem)
-    else
-      FDaoItemPedidoVenda.Insert(ModelItem)
+    for Var ModelItem in AModel.Itens do
+    begin
+      if ModelItem.Codigo > 0 then
+        FDaoItemPedidoVenda.Update(ModelItem)
+      else
+      begin
+        ModelItem.NumeroPedido := AModel.Numero;
+        FDaoItemPedidoVenda.Insert(ModelItem);
+      end;
+    end;
+    TModelConnection.GetInstance.FDConnection.Commit;
+  except
+    TModelConnection.GetInstance.FDConnection.Rollback;
+    raise;
   end;
 end;
 

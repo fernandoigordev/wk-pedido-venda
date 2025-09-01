@@ -3,12 +3,12 @@ unit Controller.Produto;
 interface
 
 uses
-  Model.Produto, Dao.Base, Dao.Produto, System.Generics.Collections;
+  Model.Produto, Dao.Produto, System.Generics.Collections;
 
 type
   TControllerProduto = class
   private
-    FDao: TDAOBase<TModelProduto>;
+    FDao: TDaoProduto;
   public
     constructor Create;
     destructor Destroy;override;

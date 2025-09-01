@@ -3,12 +3,12 @@ unit Controller.PedidoVenda;
 interface
 
 uses
-  Model.PedidoVenda, Dao.Base, Dao.PedidoVenda, System.Generics.Collections;
+  Model.PedidoVenda, Dao.PedidoVenda, System.Generics.Collections;
 
 type
   TControllerPedidoVenda = class
   private
-    FDao: TDAOBase<TModelPedidoVenda>;
+    FDao: TDaoPedidoVenda;
   public
     constructor Create;
     destructor Destroy;override;
@@ -52,6 +52,7 @@ end;
 
 procedure TControllerPedidoVenda.Insert(AModel: TModelPedidoVenda);
 begin
+  AModel.Numero := FDao.GetProximoNumero;
   FDao.Insert(AModel);
 end;
 

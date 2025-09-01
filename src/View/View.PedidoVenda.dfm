@@ -495,7 +495,7 @@ object ViewPedido: TViewPedido
           Left = 3
           Top = 124
           Width = 750
-          Height = 214
+          Height = 174
           Align = alClient
           BorderStyle = bsNone
           Color = clWhite
@@ -513,6 +513,7 @@ object ViewPedido: TViewPedido
           TitleFont.Height = -16
           TitleFont.Name = 'Roboto'
           TitleFont.Style = []
+          OnKeyPress = DBGridItemPedidoKeyPress
           Columns = <
             item
               Alignment = taLeftJustify
@@ -577,6 +578,57 @@ object ViewPedido: TViewPedido
               Width = 112
               Visible = True
             end>
+        end
+        object Panel1: TPanel
+          Left = 0
+          Top = 301
+          Width = 756
+          Height = 40
+          Align = alBottom
+          BevelOuter = bvNone
+          Color = clWhite
+          Padding.Right = 10
+          ParentBackground = False
+          ShowCaption = False
+          TabOrder = 4
+          ExplicitTop = 81
+          object Label5: TLabel
+            AlignWithMargins = True
+            Left = 5
+            Top = 3
+            Width = 115
+            Height = 34
+            Margins.Left = 5
+            Margins.Right = 20
+            Align = alLeft
+            Caption = 'Total do Pedido'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = 12434877
+            Font.Height = -16
+            Font.Name = 'Segoe UI'
+            Font.Style = []
+            ParentFont = False
+            ExplicitLeft = 490
+          end
+          object DBEdit1: TDBEdit
+            Left = 140
+            Top = 0
+            Width = 121
+            Height = 40
+            Align = alLeft
+            BorderStyle = bsNone
+            DataField = 'TotalItens'
+            DataSource = dsItemPedido
+            Enabled = False
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -19
+            Font.Name = 'Segoe UI'
+            Font.Style = [fsBold]
+            ParentFont = False
+            TabOrder = 0
+            ExplicitLeft = 625
+          end
         end
       end
     end
@@ -644,6 +696,7 @@ object ViewPedido: TViewPedido
       04000000010007535542545950450200490006004D6F6E6579000000}
     Active = True
     Aggregates = <>
+    AggregatesActive = True
     FieldDefs = <
       item
         Name = 'Codigo'
@@ -714,6 +767,13 @@ object ViewPedido: TViewPedido
       LookupResultField = 'PrecoVenda'
       KeyFields = 'CodigoProduto'
       Lookup = True
+    end
+    object cdsItemPedidoTotalItens: TAggregateField
+      FieldName = 'TotalItens'
+      Active = True
+      currency = True
+      DisplayName = ''
+      Expression = 'SUM(Quantidade * ValorTotal)'
     end
   end
   object dsPedido: TDataSource

@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Data.DB,
   Vcl.DBCtrls, Vcl.Mask, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.ComCtrls,
-  Datasnap.DBClient, Model.ItemPedidoVenda, System.Generics.Collections, Controller.PedidoVenda, Model.PedidoVenda;
+  Datasnap.DBClient, Model.ItemPedidoVenda, System.Generics.Collections,
+  Controller.PedidoVenda, Model.PedidoVenda, View.ItemPedidoVenda;
 
 type
   TViewPedido = class(TForm)
@@ -65,6 +66,10 @@ type
     cdsItemPedidoDescricaoProduto: TStringField;
     cdsItemPedidoPrecoDoProduto: TCurrencyField;
     cdsProdutoDescricao: TStringField;
+    Panel1: TPanel;
+    Label5: TLabel;
+    DBEdit1: TDBEdit;
+    cdsItemPedidoTotalItens: TAggregateField;
     procedure SpeedButton1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure DBGridListagemKeyPress(Sender: TObject; var Key: Char);
@@ -72,6 +77,7 @@ type
     procedure SpeedButtonCancelarClick(Sender: TObject);
     procedure SpeedButtonSalvarClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure DBGridItemPedidoKeyPress(Sender: TObject; var Key: Char);
   private
     FControllerPedidoVenda: TControllerPedidoVenda;
     procedure PreencheCdsProduto;
@@ -81,7 +87,7 @@ type
     Procedure PopulaPedido(APedido: TModelPedidoVenda);
 
     procedure ListarPedidos;
-    procedure AbreTelaItemPedido;
+    procedure AbreTelaItemPedido(ATipoOperacao: TTipoOperacao);
     procedure MudarAba(ATabSheet: TTabSheet);
   public
     { Public declarations }
@@ -93,21 +99,30 @@ var
 implementation
 
 uses
-  View.ItemPedidoVenda, Controller.Cliente, Model.Cliente,
+  Controller.Cliente, Model.Cliente,
   Controller.Produto, Model.Produto;
 
 {$R *.dfm}
 
-procedure TViewPedido.AbreTelaItemPedido;
+procedure TViewPedido.AbreTelaItemPedido(ATipoOperacao: TTipoOperacao);
 var
   LViewItemPedidoVenda: TViewItemPedidoVenda;
 begin
   LViewItemPedidoVenda := TViewItemPedidoVenda.Create(Self);
   try
-    LViewItemPedidoVenda.SetCds(cdsItemPedido, cdsProduto);
+    LViewItemPedidoVenda.SetCds(cdsItemPedido, cdsProduto, ATipoOperacao);
     LViewItemPedidoVenda.ShowModal;
   finally
     LViewItemPedidoVenda.Free;
+  end;
+end;
+
+procedure TViewPedido.DBGridItemPedidoKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    if cdsItemPedido.RecordCount > 0 then
+      AbreTelaItemPedido(toEditar);
   end;
 end;
 
@@ -131,6 +146,7 @@ end;
 procedure TViewPedido.FormCreate(Sender: TObject);
 begin
   ListarPedidos;
+  MudarAba(TabSheetListagem);
 end;
 
 procedure TViewPedido.ListarPedidos;
@@ -151,9 +167,12 @@ var
   LItemPedido: TModelItemPedidoVenda;
 begin
   APedido.Numero := cdsPedidoNumero.AsInteger;
-  Apedido.DataEmissao := cdsPedidoDataEmissao.AsDateTime;
+  if cdsPedidoDataEmissao.AsDateTime > 0 then
+    Apedido.DataEmissao := cdsPedidoDataEmissao.AsDateTime
+  else
+    Apedido.DataEmissao := Now;
   Apedido.CodigoCliente := cdsPedidoCodigoCliente.AsInteger;
-  Apedido.ValorTotal := cdsPedidoValorTotal.AsCurrency;
+  Apedido.ValorTotal := cdsItemPedidoTotalItens.Value;
 
   cdsItemPedido.First;
   while not cdsItemPedido.Eof do
@@ -259,17 +278,17 @@ begin
   finally
     LControllerProduto.Free;
   end;
-
 end;
 
 procedure TViewPedido.SpeedButton1Click(Sender: TObject);
 begin
-  AbreTelaItemPedido;
+  AbreTelaItemPedido(toInserir);
 end;
 
 procedure TViewPedido.SpeedButtonCancelarClick(Sender: TObject);
 begin
   cdsPedido.Cancel;
+  ListarPedidos;
   MudarAba(TabSheetListagem);
 end;
 
@@ -296,6 +315,7 @@ begin
     LModel.Free;
   end;
 
+  ListarPedidos;
   MudarAba(TabSheetListagem);
 end;
 

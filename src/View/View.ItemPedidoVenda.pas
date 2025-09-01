@@ -8,6 +8,8 @@ uses
   Vcl.Mask, Vcl.DBCtrls, Data.DB, Datasnap.DBClient;
 
 type
+  TTipoOperacao = (toInserir, toEditar);
+
   TViewItemPedidoVenda = class(TForm)
     PanelTitulo: TPanel;
     LabelTitulo: TLabel;
@@ -30,10 +32,13 @@ type
     dsItemPedido: TDataSource;
     procedure SpeedButtonCancelarClick(Sender: TObject);
     procedure SpeedButtonSalvarClick(Sender: TObject);
+    procedure DBEditCodigoExit(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    { Private declarations }
+    procedure Cancelar;
+    procedure Salvar;
   public
-    procedure SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet);
+    procedure SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet; ATipoOperacao: TTipoOperacao);
 
   end;
 
@@ -44,22 +49,50 @@ implementation
 
 { TViewItemPedidoVenda }
 
-procedure TViewItemPedidoVenda.SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet);
+procedure TViewItemPedidoVenda.DBEditCodigoExit(Sender: TObject);
+begin
+  dsItemPedido.DataSet.FieldByName('Quantidade').AsInteger := 1;
+  dsItemPedido.DataSet.FieldByName('ValorUnitario').AsCurrency :=
+  dsProduto.DataSet.FieldByName('PrecoVenda').AsCurrency;
+end;
+
+procedure TViewItemPedidoVenda.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  Cancelar;
+end;
+
+procedure TViewItemPedidoVenda.SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet; ATipoOperacao: TTipoOperacao);
 begin
   dsItemPedido.DataSet := ACdsItemPedido;
   dsProduto.DataSet := ACdsProduto;
-  dsItemPedido.DataSet.Append;
+
+  if ATipoOperacao = toInserir then
+    dsItemPedido.DataSet.Append
+  else
+    dsItemPedido.DataSet.Edit;
+end;
+
+procedure TViewItemPedidoVenda.Salvar;
+begin
+  dsItemPedido.DataSet.FieldByName('ValorTotal').AsCurrency := dsItemPedido.DataSet.FieldByName('ValorUnitario').AsCurrency * dsItemPedido.DataSet.FieldByName('Quantidade').AsInteger;
+  dsItemPedido.DataSet.Post;
+end;
+
+procedure TViewItemPedidoVenda.Cancelar;
+begin
+  if dsItemPedido.DataSet.State in dsEditModes then
+    dsItemPedido.DataSet.Cancel;
 end;
 
 procedure TViewItemPedidoVenda.SpeedButtonCancelarClick(Sender: TObject);
 begin
-  dsItemPedido.DataSet.Cancel;
   Close;
 end;
 
 procedure TViewItemPedidoVenda.SpeedButtonSalvarClick(Sender: TObject);
 begin
-  dsItemPedido.DataSet.Post;
+  Salvar;
   Close;
 end;
 

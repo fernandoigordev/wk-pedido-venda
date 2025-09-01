@@ -11,6 +11,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poOwnerFormCenter
+  OnClose = FormClose
   TextHeight = 15
   object PanelTitulo: TPanel
     Left = 0
@@ -223,6 +224,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       Font.Style = []
       ParentFont = False
       TabOrder = 0
+      OnExit = DBEditCodigoExit
     end
     object DBEdit1: TDBEdit
       Left = 16

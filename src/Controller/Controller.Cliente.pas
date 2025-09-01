@@ -3,12 +3,12 @@ unit Controller.Cliente;
 interface
 
 uses
-  Model.Cliente, Dao.Base, Dao.Cliente, System.Generics.Collections;
+  Model.Cliente, Dao.Cliente, System.Generics.Collections;
 
 type
   TControllerCliente = class
   private
-    FDao: TDAOBase<TModelCliente>;
+    FDao: TDaoCliente;
   public
     constructor Create;
     destructor Destroy;override;
