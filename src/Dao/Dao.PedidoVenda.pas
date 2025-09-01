@@ -25,7 +25,7 @@ type
 implementation
 
 uses
-  Data.DB, Model.Connection;
+  Data.DB, Model.Connection, System.SysUtils;
 
 { TDaoPedidoVenda }
 
@@ -38,8 +38,8 @@ end;
 procedure TDaoPedidoVenda.Delete(AId: Integer);
 begin
   FQuery.Close;
-  FQuery.SQL.Text := 'DELETE FROM PedidoVenda WHERE Id = :Id';
-  FQuery.ParamByName('Id').AsInteger := AId;
+  FQuery.SQL.Text := 'DELETE FROM PedidoVenda WHERE Numero = :Numero';
+  FQuery.ParamByName('Numero').AsInteger := AId;
   FQuery.ExecSQL;
 end;
 
@@ -67,6 +67,9 @@ begin
       LModel.DataEmissao := FQuery.FieldByName('DataEmissao').AsDateTime;
       LModel.CodigoCliente := FQuery.FieldByName('CodigoCliente').AsInteger;
       LModel.ValorTotal := FQuery.FieldByName('ValorTotal').AsCurrency;
+      if Assigned(LModel.Itens) then
+        FreeAndNil(LModel.Itens);
+
       LModel.Itens := FDaoItemPedidoVenda.GetAllByPedido(LModel.Numero);
       Result.Add(LModel);
       FQuery.Next;

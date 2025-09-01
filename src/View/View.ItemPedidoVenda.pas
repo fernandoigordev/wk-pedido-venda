@@ -24,9 +24,9 @@ type
     Label1: TLabel;
     DBEditCodigo: TDBEdit;
     Label2: TLabel;
-    DBEdit1: TDBEdit;
+    DBEditQuantidade: TDBEdit;
     Label3: TLabel;
-    DBEdit2: TDBEdit;
+    DBEditValorUnitario: TDBEdit;
     DBLookupComboBoxEstado: TDBLookupComboBox;
     dsProduto: TDataSource;
     dsItemPedido: TDataSource;
@@ -37,6 +37,7 @@ type
   private
     procedure Cancelar;
     procedure Salvar;
+    function Valida: Boolean;
   public
     procedure SetCds(ACdsItemPedido, ACdsProduto: TClientDataSet; ATipoOperacao: TTipoOperacao);
 
@@ -44,6 +45,9 @@ type
 
 
 implementation
+
+uses
+  System.UITypes;
 
 {$R *.dfm}
 
@@ -71,6 +75,8 @@ begin
     dsItemPedido.DataSet.Append
   else
     dsItemPedido.DataSet.Edit;
+
+  DBEditCodigo.Enabled := ATipoOperacao = toInserir;
 end;
 
 procedure TViewItemPedidoVenda.Salvar;
@@ -92,8 +98,43 @@ end;
 
 procedure TViewItemPedidoVenda.SpeedButtonSalvarClick(Sender: TObject);
 begin
-  Salvar;
-  Close;
+  if Valida then
+  begin
+    Salvar;
+    Close;
+  end;
+end;
+
+function TViewItemPedidoVenda.Valida: Boolean;
+begin
+  Result := True;
+
+  if DBLookupComboBoxEstado.Text.IsEmpty then
+  begin
+    TaskMessageDlg('Validação', 'Produto inválido! Verifique o código informado.',
+                   mtError, [mbOK], 0);
+    DBEditCodigo.SetFocus;
+    Exit(False);
+  end;
+
+  if StrToIntDef(DBEditQuantidade.Text, 0) <= 0 then
+  begin
+    TaskMessageDlg('Validação', 'Quantidade inválida! Quantidade precisa ser maior que 0.',
+                   mtError, [mbOK], 0);
+    DBEditQuantidade.SetFocus;
+    Exit(False);
+  end;
+
+  if StrToFloatDef(StringReplace(DBEditValorUnitario.Text, 'R$', '', [rfReplaceAll]).trim, 0) <= 0 then
+  begin
+    TaskMessageDlg('Validação', 'Preço inválido! Preço precisa ser maior que 0.',
+                   mtError, [mbOK], 0);
+    DBEditValorUnitario.SetFocus;
+    Exit(False);
+  end;
+
+
+
 end;
 
 end.

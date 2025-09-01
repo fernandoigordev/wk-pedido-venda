@@ -98,4 +98,11 @@ begin
   end;
 end;
 
+initialization
+  TModelConnection.GetInstance;
+
+finalization
+  TModelConnection.GetInstance.Free;
+
+
 end.

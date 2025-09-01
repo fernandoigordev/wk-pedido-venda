@@ -152,6 +152,7 @@
         <DCCReference Include="src\Dao\Dao.Produto.pas"/>
         <DCCReference Include="src\Controller\Controller.Cliente.pas"/>
         <DCCReference Include="src\Controller\Controller.Produto.pas"/>
+        <DCCReference Include="src\Controller\Controller.ItemPedidoVenda.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -181,6 +182,18 @@
                 <DeployFile LocalName="bin\wk_pedido_venda.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>wk_pedido_venda.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="bin\wk_pedido_venda.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>wk_pedido_venda.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="bin\wk_pedido_venda.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>wk_pedido_venda.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

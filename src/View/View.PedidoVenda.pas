@@ -70,14 +70,26 @@ type
     Label5: TLabel;
     DBEdit1: TDBEdit;
     cdsItemPedidoTotalItens: TAggregateField;
-    procedure SpeedButton1Click(Sender: TObject);
+    Panel3: TPanel;
+    PanelExcluirPedido: TPanel;
+    Shape3: TShape;
+    SpeedButton3: TSpeedButton;
+    PanelCarregarPedido: TPanel;
+    Shape2: TShape;
+    SpeedButton2: TSpeedButton;
     procedure FormCreate(Sender: TObject);
-    procedure DBGridListagemKeyPress(Sender: TObject; var Key: Char);
     procedure SpeedButtonNovoClick(Sender: TObject);
     procedure SpeedButtonCancelarClick(Sender: TObject);
     procedure SpeedButtonSalvarClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure DBGridItemPedidoKeyPress(Sender: TObject; var Key: Char);
+    procedure DBGridItemPedidoKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure DBGridListagemKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure DBEditCodigoClienteChange(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     FControllerPedidoVenda: TControllerPedidoVenda;
     procedure PreencheCdsProduto;
@@ -85,10 +97,14 @@ type
     procedure PreencheCdsPedido;
     procedure PreencheCdsItemPedido(AListaItem: TObjectList<TModelItemPedidoVenda>);
     Procedure PopulaPedido(APedido: TModelPedidoVenda);
+    procedure DeleteItemPedidoVenda(ACodigo: Integer);
+    procedure HabilitaBotoesAcao;
 
     procedure ListarPedidos;
     procedure AbreTelaItemPedido(ATipoOperacao: TTipoOperacao);
     procedure MudarAba(ATabSheet: TTabSheet);
+    function Valida: Boolean;
+    function GetCodigoPedido: Integer;
   public
     { Public declarations }
   end;
@@ -99,8 +115,8 @@ var
 implementation
 
 uses
-  Controller.Cliente, Model.Cliente,
-  Controller.Produto, Model.Produto;
+  Controller.Cliente, Model.Cliente, Controller.Produto, Model.Produto,
+  Controller.ItemPedidoVenda, System.UITypes;
 
 {$R *.dfm}
 
@@ -117,24 +133,69 @@ begin
   end;
 end;
 
-procedure TViewPedido.DBGridItemPedidoKeyPress(Sender: TObject; var Key: Char);
+procedure TViewPedido.DBEditCodigoClienteChange(Sender: TObject);
 begin
-  if Key = #13 then
+  HabilitaBotoesAcao;
+end;
+
+procedure TViewPedido.DBGridItemPedidoKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = vkReturn then
   begin
     if cdsItemPedido.RecordCount > 0 then
+    begin
       AbreTelaItemPedido(toEditar);
+    end;
+  end
+  else if Key = vkDelete then
+  begin
+    if MessageDlg('Deseja realmente excluir o Item: ' + cdsItemPedidoCodigo.AsString + '?',
+                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      if not (cdsItemPedido.State in [dsEdit, dsInsert]) then
+      begin
+        DeleteItemPedidoVenda(cdsItemPedidoCodigo.AsInteger);
+        cdsItemPedido.Delete;
+      end;
+    end;
   end;
 end;
 
-procedure TViewPedido.DBGridListagemKeyPress(Sender: TObject; var Key: Char);
+procedure TViewPedido.DBGridListagemKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
 begin
-  if Key = #13 then
+  if Key = vkReturn then
   begin
     if cdsPedido.RecordCount > 0 then
     begin
       cdsPedido.Edit;
       MudarAba(TabSheetCadastro);
     end;
+  end
+  else if Key = vkDelete then
+  begin
+    if MessageDlg('Deseja realmente excluir o pedido de número: ' + cdsPedidoNumero.AsString + '?',
+                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      if not (cdsPedido.State in [dsEdit, dsInsert]) then
+      begin
+        FControllerPedidoVenda.Delete(cdsPedidoNumero.AsInteger);
+        ListarPedidos;
+      end;
+    end;
+  end;
+end;
+
+procedure TViewPedido.DeleteItemPedidoVenda(ACodigo: Integer);
+var
+  LControllerItemPedido: TControllerItemPedidoVenda;
+begin
+  LControllerItemPedido := TControllerItemPedidoVenda.Create;
+  try
+    LControllerItemPedido.Delete(ACodigo);
+  finally
+    LControllerItemPedido.Free;
   end;
 end;
 
@@ -145,13 +206,37 @@ end;
 
 procedure TViewPedido.FormCreate(Sender: TObject);
 begin
+  FControllerPedidoVenda := TControllerPedidoVenda.Create;
   ListarPedidos;
   MudarAba(TabSheetListagem);
 end;
 
+function TViewPedido.GetCodigoPedido: Integer;
+var
+  LCodigoPedido: String;
+begin
+  Result := 0;
+  if InputQuery('Consulta de Pedido', 'Digite o código do Pedido:', LCodigoPedido) then
+  begin
+    Result := StrToIntDef(LCodigoPedido, 0);
+    if Result <= 0 then
+      ShowMessage('O Código digitado é inválido.');
+  end
+  else
+    ShowMessage('Operação cancelada pelo usuário.');
+end;
+
+procedure TViewPedido.HabilitaBotoesAcao;
+var
+  LHabilitaBotoes: Boolean;
+begin
+  LHabilitaBotoes := DBEditCodigoCliente.Text = EmptyStr;
+  PanelCarregarPedido.Enabled := LHabilitaBotoes;
+  PanelExcluirPedido.Enabled := LHabilitaBotoes;
+end;
+
 procedure TViewPedido.ListarPedidos;
 begin
-  FControllerPedidoVenda := TControllerPedidoVenda.Create;
   PreencheCdsCliente;
   PreencheCdsProduto;
   PreencheCdsPedido;
@@ -241,15 +326,19 @@ begin
   cdsItemPedido.EmptyDataSet;
 
   LListaPedido := FControllerPedidoVenda.GetAll;
-  for LPedido in LListaPedido do
-  begin
-    cdsPedido.Append;
-    cdsPedidoNumero.AsInteger := LPedido.Numero;
-    cdsPedidoDataEmissao.AsDateTime := LPedido.DataEmissao;
-    cdsPedidoCodigoCliente.AsInteger := LPedido.CodigoCliente;
-    cdsPedidoValorTotal.AsCurrency := LPedido.ValorTotal;
-    cdsPedido.Post;
-    PreencheCdsItemPedido(LPedido.Itens);
+  try
+    for LPedido in LListaPedido do
+    begin
+      cdsPedido.Append;
+      cdsPedidoNumero.AsInteger := LPedido.Numero;
+      cdsPedidoDataEmissao.AsDateTime := LPedido.DataEmissao;
+      cdsPedidoCodigoCliente.AsInteger := LPedido.CodigoCliente;
+      cdsPedidoValorTotal.AsCurrency := LPedido.ValorTotal;
+      cdsPedido.Post;
+      PreencheCdsItemPedido(LPedido.Itens);
+    end;
+  finally
+    LListaPedido.Free;
   end;
 end;
 
@@ -285,6 +374,46 @@ begin
   AbreTelaItemPedido(toInserir);
 end;
 
+procedure TViewPedido.SpeedButton2Click(Sender: TObject);
+var
+  LCodigoPedido: Integer;
+begin
+  LCodigoPedido := GetCodigoPedido;
+  if LCodigoPedido > 0 then
+  begin
+    if MessageDlg('Deseja realmente carregar o Pedido: ' + LCodigoPedido.ToString + '?',
+                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      if cdsPedido.State in dsEditModes then
+      begin
+        cdsPedido.Cancel;
+        if cdsPedido.Locate('Numero', LCodigoPedido, []) then
+          cdsPedido.Edit
+        else
+        begin
+          cdsPedido.Append;
+          TaskMessageDlg('Pedido N° ' + LCodigoPedido.ToString , 'O Pedido não foi localizado.', mtError, [mbOK], 0);
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TViewPedido.SpeedButton3Click(Sender: TObject);
+var
+  LCodigoPedido: Integer;
+begin
+  LCodigoPedido := GetCodigoPedido;
+  if LCodigoPedido > 0 then
+  begin
+    if MessageDlg('Deseja realmente excluir o Pedido: ' + LCodigoPedido.ToString + '?',
+                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      FControllerPedidoVenda.Delete(LCodigoPedido);
+    end;
+  end;
+end;
+
 procedure TViewPedido.SpeedButtonCancelarClick(Sender: TObject);
 begin
   cdsPedido.Cancel;
@@ -302,21 +431,45 @@ procedure TViewPedido.SpeedButtonSalvarClick(Sender: TObject);
 var
   LModel: TModelPedidoVenda;
 begin
-  cdsPedido.Post;
+  if Valida then
+  Begin
+    cdsPedido.Post;
 
-  LModel := TModelPedidoVenda.Create;
-  try
-    PopulaPedido(LModel);
-    if LModel.Numero > 0 then
-      FControllerPedidoVenda.Update(LModel)
-    else
-      FControllerPedidoVenda.Insert(LModel);
-  finally
-    LModel.Free;
+    LModel := TModelPedidoVenda.Create;
+    try
+      PopulaPedido(LModel);
+      if LModel.Numero > 0 then
+        FControllerPedidoVenda.Update(LModel)
+      else
+        FControllerPedidoVenda.Insert(LModel);
+    finally
+      LModel.Free;
+    end;
+
+    ListarPedidos;
+    MudarAba(TabSheetListagem);
+  End;
+end;
+
+function TViewPedido.Valida: Boolean;
+begin
+  Result := True;
+
+  if DBLookupComboBoxCliente.Text.IsEmpty then
+  begin
+    TaskMessageDlg('Validação', 'Cliente inválido! Verifique o código informado.',
+                   mtError, [mbOK], 0);
+    DBEditCodigoCliente.SetFocus;
+    Exit(False);
   end;
 
-  ListarPedidos;
-  MudarAba(TabSheetListagem);
+  if cdsItemPedido.IsEmpty then
+  begin
+    TaskMessageDlg('Validação', 'Número de itens do pedido inválido! O Pedido precisa ter ao menos um item.',
+                   mtError, [mbOK], 0);
+    DBGridItemPedido.SetFocus;
+    Exit(False);
+  end;
 end;
 
 end.

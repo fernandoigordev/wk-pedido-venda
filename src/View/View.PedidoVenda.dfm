@@ -1,7 +1,7 @@
 object ViewPedido: TViewPedido
   Left = 0
   Top = 0
-  Caption = 'dsItemPedido'
+  Caption = 'Wk Pedido de venda'
   ClientHeight = 441
   ClientWidth = 764
   Color = clBtnFace
@@ -10,6 +10,7 @@ object ViewPedido: TViewPedido
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  WindowState = wsMaximized
   OnClose = FormClose
   OnCreate = FormCreate
   TextHeight = 15
@@ -135,7 +136,7 @@ object ViewPedido: TViewPedido
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
-        Font.Name = 'Roboto'
+        Font.Name = 'Segoe UI'
         Font.Style = []
         Options = [dgTitles, dgColumnResize, dgRowLines, dgRowSelect, dgMultiSelect, dgTitleHotTrack]
         ParentFont = False
@@ -145,7 +146,7 @@ object ViewPedido: TViewPedido
         TitleFont.Height = -16
         TitleFont.Name = 'Roboto'
         TitleFont.Style = []
-        OnKeyPress = DBGridListagemKeyPress
+        OnKeyUp = DBGridListagemKeyUp
         Columns = <
           item
             Alignment = taLeftJustify
@@ -326,7 +327,7 @@ object ViewPedido: TViewPedido
           Left = 0
           Top = 0
           Width = 756
-          Height = 81
+          Height = 118
           Align = alTop
           BevelOuter = bvNone
           Color = clWhite
@@ -391,6 +392,7 @@ object ViewPedido: TViewPedido
             MaxLength = 18
             ParentFont = False
             TabOrder = 1
+            OnChange = DBEditCodigoClienteChange
           end
           object DBLookupComboBoxCliente: TDBLookupComboBox
             Left = 189
@@ -411,10 +413,135 @@ object ViewPedido: TViewPedido
             ParentFont = False
             TabOrder = 2
           end
+          object Panel3: TPanel
+            Left = 0
+            Top = 78
+            Width = 756
+            Height = 40
+            Align = alBottom
+            BevelOuter = bvNone
+            Color = clWhite
+            Padding.Right = 10
+            ParentBackground = False
+            ShowCaption = False
+            TabOrder = 3
+            ExplicitTop = 8
+            object PanelExcluirPedido: TPanel
+              AlignWithMargins = True
+              Left = 129
+              Top = 10
+              Width = 120
+              Height = 27
+              Margins.Top = 10
+              Align = alLeft
+              BevelOuter = bvNone
+              Caption = 'Panel1'
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Segoe UI'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 0
+              ExplicitTop = 3
+              ExplicitHeight = 34
+              object Shape3: TShape
+                Left = 0
+                Top = 0
+                Width = 120
+                Height = 27
+                Align = alClient
+                Brush.Color = 9615102
+                Pen.Color = 7325480
+                Pen.Style = psClear
+                Shape = stRoundRect
+                ExplicitLeft = 144
+                ExplicitTop = -8
+                ExplicitWidth = 65
+                ExplicitHeight = 65
+              end
+              object SpeedButton3: TSpeedButton
+                Left = 0
+                Top = 0
+                Width = 120
+                Height = 27
+                Cursor = crHandPoint
+                Align = alClient
+                Caption = 'Excluir Pedido'
+                Flat = True
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWhite
+                Font.Height = -11
+                Font.Name = 'Segoe UI'
+                Font.Style = []
+                ParentFont = False
+                OnClick = SpeedButton3Click
+                ExplicitTop = -3
+                ExplicitWidth = 150
+                ExplicitHeight = 34
+              end
+            end
+            object PanelCarregarPedido: TPanel
+              AlignWithMargins = True
+              Left = 3
+              Top = 10
+              Width = 120
+              Height = 27
+              Margins.Top = 10
+              Align = alLeft
+              BevelOuter = bvNone
+              Caption = 'Panel1'
+              Enabled = False
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Segoe UI'
+              Font.Style = []
+              ParentFont = False
+              TabOrder = 1
+              object Shape2: TShape
+                Left = 0
+                Top = 0
+                Width = 120
+                Height = 27
+                Align = alClient
+                Brush.Color = 7465981
+                Pen.Color = 7325480
+                Pen.Style = psClear
+                Shape = stRoundRect
+                ExplicitLeft = 144
+                ExplicitTop = -8
+                ExplicitWidth = 65
+                ExplicitHeight = 65
+              end
+              object SpeedButton2: TSpeedButton
+                Left = 0
+                Top = 0
+                Width = 120
+                Height = 27
+                Cursor = crHandPoint
+                Align = alClient
+                Caption = 'Carregar Pedido'
+                Flat = True
+                Font.Charset = DEFAULT_CHARSET
+                Font.Color = clWhite
+                Font.Height = -11
+                Font.Name = 'Segoe UI'
+                Font.Style = []
+                ParentFont = False
+                OnClick = SpeedButton2Click
+                ExplicitLeft = 136
+                ExplicitTop = 8
+                ExplicitWidth = 23
+                ExplicitHeight = 22
+              end
+            end
+          end
         end
         object PanelBotaoTop: TPanel
           Left = 0
-          Top = 81
+          Top = 118
           Width = 756
           Height = 40
           Align = alTop
@@ -424,6 +551,7 @@ object ViewPedido: TViewPedido
           ParentBackground = False
           ShowCaption = False
           TabOrder = 2
+          ExplicitTop = 81
           object Label3: TLabel
             AlignWithMargins = True
             Left = 5
@@ -493,9 +621,9 @@ object ViewPedido: TViewPedido
         object DBGridItemPedido: TDBGrid
           AlignWithMargins = True
           Left = 3
-          Top = 124
+          Top = 161
           Width = 750
-          Height = 174
+          Height = 137
           Align = alClient
           BorderStyle = bsNone
           Color = clWhite
@@ -505,7 +633,7 @@ object ViewPedido: TViewPedido
           Font.Height = -16
           Font.Name = 'Segoe UI'
           Font.Style = []
-          Options = [dgTitles, dgColumnResize, dgRowLines, dgRowSelect, dgMultiSelect, dgTitleHotTrack]
+          Options = [dgTitles, dgColumnResize, dgRowLines, dgRowSelect, dgConfirmDelete, dgMultiSelect, dgTitleHotTrack]
           ParentFont = False
           TabOrder = 3
           TitleFont.Charset = DEFAULT_CHARSET
@@ -513,7 +641,7 @@ object ViewPedido: TViewPedido
           TitleFont.Height = -16
           TitleFont.Name = 'Roboto'
           TitleFont.Style = []
-          OnKeyPress = DBGridItemPedidoKeyPress
+          OnKeyUp = DBGridItemPedidoKeyUp
           Columns = <
             item
               Alignment = taLeftJustify
@@ -773,7 +901,7 @@ object ViewPedido: TViewPedido
       Active = True
       currency = True
       DisplayName = ''
-      Expression = 'SUM(Quantidade * ValorTotal)'
+      Expression = 'SUM(ValorTotal)'
     end
   end
   object dsPedido: TDataSource

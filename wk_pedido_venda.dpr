@@ -16,11 +16,13 @@ uses
   Model.Produto in 'src\Model\Model.Produto.pas',
   Dao.Produto in 'src\Dao\Dao.Produto.pas',
   Controller.Cliente in 'src\Controller\Controller.Cliente.pas',
-  Controller.Produto in 'src\Controller\Controller.Produto.pas';
+  Controller.Produto in 'src\Controller\Controller.Produto.pas',
+  Controller.ItemPedidoVenda in 'src\Controller\Controller.ItemPedidoVenda.pas';
 
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TViewPedido, ViewPedido);

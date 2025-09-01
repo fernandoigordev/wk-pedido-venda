@@ -226,7 +226,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       TabOrder = 0
       OnExit = DBEditCodigoExit
     end
-    object DBEdit1: TDBEdit
+    object DBEditQuantidade: TDBEdit
       Left = 16
       Top = 107
       Width = 100
@@ -241,7 +241,7 @@ object ViewItemPedidoVenda: TViewItemPedidoVenda
       ParentFont = False
       TabOrder = 1
     end
-    object DBEdit2: TDBEdit
+    object DBEditValorUnitario: TDBEdit
       Left = 131
       Top = 107
       Width = 100
