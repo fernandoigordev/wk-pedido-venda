@@ -68,6 +68,7 @@ type
     procedure SpeedButtonNovoClick(Sender: TObject);
     procedure SpeedButtonCancelarClick(Sender: TObject);
     procedure SpeedButtonSalvarClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     FControllerPedidoVenda: TControllerPedidoVenda;
     procedure PreencheCdsProduto;
@@ -118,6 +119,11 @@ begin
   end;
 end;
 
+procedure TViewPedido.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  FControllerPedidoVenda.Free;
+end;
+
 procedure TViewPedido.FormCreate(Sender: TObject);
 begin
   ListarPedidos;
@@ -125,9 +131,10 @@ end;
 
 procedure TViewPedido.ListarPedidos;
 begin
-//  PreencheCdsCliente;
-//  PreencheCdsProduto;
-//  PreencheCdsPedido;
+  FControllerPedidoVenda := TControllerPedidoVenda.Create;
+  PreencheCdsCliente;
+  PreencheCdsProduto;
+  PreencheCdsPedido;
 end;
 
 procedure TViewPedido.MudarAba(ATabSheet: TTabSheet);

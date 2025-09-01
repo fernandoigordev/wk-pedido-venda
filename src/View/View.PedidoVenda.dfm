@@ -10,6 +10,7 @@ object ViewPedido: TViewPedido
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnClose = FormClose
   OnCreate = FormCreate
   TextHeight = 15
   object PanelTitulo: TPanel
@@ -55,7 +56,7 @@ object ViewPedido: TViewPedido
     Top = 50
     Width = 764
     Height = 391
-    ActivePage = TabSheetListagem
+    ActivePage = TabSheetCadastro
     Align = alClient
     TabOrder = 1
     object TabSheetListagem: TTabSheet
@@ -147,6 +148,7 @@ object ViewPedido: TViewPedido
         OnKeyPress = DBGridListagemKeyPress
         Columns = <
           item
+            Alignment = taLeftJustify
             Expanded = False
             FieldName = 'Numero'
             Title.Caption = 'N'#250'mero'
@@ -159,6 +161,7 @@ object ViewPedido: TViewPedido
             Visible = True
           end
           item
+            Alignment = taLeftJustify
             Expanded = False
             FieldName = 'CodigoCliente'
             Title.Caption = 'C'#243'd. Cliente'
@@ -171,8 +174,10 @@ object ViewPedido: TViewPedido
             Visible = True
           end
           item
+            Alignment = taRightJustify
             Expanded = False
             FieldName = 'DataEmissao'
+            Title.Alignment = taRightJustify
             Title.Caption = 'Data de emiss'#227'o'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
@@ -185,6 +190,7 @@ object ViewPedido: TViewPedido
           item
             Expanded = False
             FieldName = 'ValorTotal'
+            Title.Alignment = taRightJustify
             Title.Caption = 'Valor Total'
             Title.Font.Charset = DEFAULT_CHARSET
             Title.Font.Color = clWindowText
@@ -395,7 +401,6 @@ object ViewPedido: TViewPedido
             Height = 29
             DataField = 'CodigoCliente'
             DataSource = dsPedido
-            Enabled = False
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -16
@@ -653,16 +658,19 @@ object ViewPedido: TViewPedido
     end
   end
   object dsPedido: TDataSource
+    AutoEdit = False
     DataSet = cdsPedido
     Left = 64
     Top = 312
   end
   object dsItemPedido: TDataSource
+    AutoEdit = False
     DataSet = cdsItemPedido
     Left = 152
     Top = 312
   end
   object dsCliente: TDataSource
+    AutoEdit = False
     DataSet = cdsCliente
     Left = 240
     Top = 312

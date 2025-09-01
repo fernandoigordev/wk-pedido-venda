@@ -8,7 +8,7 @@ uses
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.PG,
   FireDAC.Phys.PGDef, FireDAC.FMXUI.Wait, Data.DB, FireDAC.Comp.Client,
   FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
-  FireDAC.DApt, FireDAC.Comp.DataSet;
+  FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Phys.MySQLDef, FireDAC.Phys.MySQL;
 
 const
   CS_NOME_ARQUIVO_CONFIGURACAO = 'Configuracao.ini';
@@ -16,7 +16,7 @@ const
 type
   TModelConnection = class(TDataModule)
     FDConnection: TFDConnection;
-    FDPhysPgDriverLink: TFDPhysPgDriverLink;
+    FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink;
     procedure DataModuleCreate(Sender: TObject);
   private
     Class var FEntityConnection: TModelConnection;
@@ -66,34 +66,34 @@ end;
 
 procedure TModelConnection.ConfigurarConexao;
 var
-  ArquivoINI: TIniFile;
-  CaminhoArquivoConfiguracao: String;
+  LArquivoINI: TIniFile;
+  LCaminhoArquivoConfiguracao: String;
 begin
-  CaminhoArquivoConfiguracao := Concat(ExtractFilePath(ParamStr(0)), CS_NOME_ARQUIVO_CONFIGURACAO);
+  LCaminhoArquivoConfiguracao := Concat(ExtractFilePath(ParamStr(0)), CS_NOME_ARQUIVO_CONFIGURACAO);
 
-  if FileExists(CaminhoArquivoConfiguracao) then
+  if FileExists(LCaminhoArquivoConfiguracao) then
   begin
-    ArquivoINI := TIniFile.Create(CaminhoArquivoConfiguracao);
+    LArquivoINI := TIniFile.Create(LCaminhoArquivoConfiguracao);
     try
-      Self.FDConnection.Params.UserName := ArquivoINI.ReadString('Conexao', 'User_Name', 'Erro ao ler User_Name');
-      Self.FDConnection.Params.Database := ArquivoINI.ReadString('Conexao', 'Database', 'Erro ao ler Database');
-      Self.FDConnection.Params.Password := ArquivoINI.ReadString('Conexao', 'Password', 'Erro ao ler Password');
-      Self.FDConnection.Params.DriverID := ArquivoINI.ReadString('Conexao', 'DriverID', 'Erro ao ler DriverID');
-      Self.FDConnection.Params.Values['Server'] := ArquivoINI.ReadString('Conexao', 'Server', 'Erro ao ler Server');
-      Self.FDConnection.Params.Values['MetaDefSchema'] := ArquivoINI.ReadString('Conexao', 'MetaDefSchema', 'Erro ao ler MetaDefSchema');
-      Self.FDConnection.Params.Values['Port'] := ArquivoINI.ReadString('Conexao', 'Port', 'Erro ao ler Port');
+      Self.FDConnection.Params.UserName := LArquivoINI.ReadString('Conexao', 'User_Name', 'Erro ao ler User_Name');
+      Self.FDConnection.Params.Database := LArquivoINI.ReadString('Conexao', 'Database', 'Erro ao ler Database');
+      Self.FDConnection.Params.Password := LArquivoINI.ReadString('Conexao', 'Password', 'Erro ao ler Password');
+      Self.FDConnection.Params.DriverID := LArquivoINI.ReadString('Conexao', 'DriverID', 'Erro ao ler DriverID');
+      Self.FDConnection.Params.Values['Server'] := LArquivoINI.ReadString('Conexao', 'Server', 'Erro ao ler Server');
+      Self.FDConnection.Params.Values['MetaDefSchema'] := LArquivoINI.ReadString('Conexao', 'MetaDefSchema', 'Erro ao ler MetaDefSchema');
+      Self.FDConnection.Params.Values['Port'] := LArquivoINI.ReadString('Conexao', 'Port', 'Erro ao ler Port');
 
-      Self.FDPhysPgDriverLink.VendorHome := ArquivoINI.ReadString('DriveLink', 'VendorHome', 'Erro ao ler VendorHome');
-      Self.FDPhysPgDriverLink.VendorLib := ArquivoINI.ReadString('DriveLink', 'VendorLib', 'Erro ao ler VendorLib');
+      Self.FDPhysMySQLDriverLink.VendorHome := LArquivoINI.ReadString('DriveLink', 'VendorHome', 'Erro ao ler VendorHome');
+      Self.FDPhysMySQLDriverLink.VendorLib := LArquivoINI.ReadString('DriveLink', 'VendorLib', 'Erro ao ler VendorLib');
 
       Self.FDConnection.Connected;
     finally
-      ArquivoINI.Free;
+      LArquivoINI.Free;
     end;
   end
   else
   begin
-    ShowMessage(Concat('Arquivo de conexão não encontrado em: ', CaminhoArquivoConfiguracao));
+    ShowMessage(Concat('Arquivo de conexão não encontrado em: ', LCaminhoArquivoConfiguracao));
     Application.Terminate;
   end;
 end;

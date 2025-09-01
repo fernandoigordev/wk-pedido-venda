@@ -14,7 +14,7 @@ object ModelConnection: TModelConnection
     Left = 56
     Top = 8
   end
-  object FDPhysPgDriverLink: TFDPhysPgDriverLink
+  object FDPhysMySQLDriverLink: TFDPhysMySQLDriverLink
     Left = 56
     Top = 64
   end

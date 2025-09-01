@@ -8,8 +8,6 @@ uses
 
 type
   TDaoProduto = class(TDAOBase<TModelProduto>)
-  private
-    FQuery: TFDQuery;
   public
     function GetAll: TObjectList<TModelProduto>; override;
     function GetById(AId: Integer): TModelProduto; override;
